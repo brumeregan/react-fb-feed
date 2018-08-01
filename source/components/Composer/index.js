@@ -18,6 +18,7 @@ export default class Feed extends Component {
                         </form>
                     </section>
                 ) }
-            </Consumer>);
+            </Consumer>
+        );
     }
 }

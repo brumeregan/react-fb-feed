@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import Styles from './styles.m.css';
-
 import { Consumer } from 'components/HOC/withProfile';
 
 export default class StatusBar extends Component {
@@ -16,6 +15,7 @@ export default class StatusBar extends Component {
                         <span>{ context.currentUserLastName }</span>
                     </button>
                 </section>) }
-            </Consumer>);
+            </Consumer>
+        );
     }
 }

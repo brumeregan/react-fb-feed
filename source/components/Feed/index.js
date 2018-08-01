@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import Composer from 'components/Composer';
 import Post from 'components/Post';
