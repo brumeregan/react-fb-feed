@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Styles from './styles.m.css';
-import { Consumer } from 'components/HOC/withProfile';
 
-export default class Feed extends Component {
-    constructor() {
-        super();
+import { withProfile } from "components/HOC/withProfile";
 
-        this._updateComment = this._updateComment.bind(this);
-        this._submitComment = this._submitComment.bind(this);
-        this._submitOnEnter = this._submitOnEnter.bind(this);
-        this._handlerFormSubmit = this._handlerFormSubmit.bind(this);
-    }
-
+@withProfile
+export default class Composer extends Component {
     static propTypes = {
         _createPost: PropTypes.func.isRequired
     };
@@ -21,18 +14,18 @@ export default class Feed extends Component {
         comment: ''
     };
 
-    _updateComment(event) {
+    _updateComment = (event) => {
         this.setState({
             comment: event.target.value
-        })
+        });
     }
 
-    _handlerFormSubmit(event) {
+    _handlerFormSubmit = (event) => {
         event.preventDefault();
         this._submitComment()
     }
 
-    _submitOnEnter(event) {
+    _submitOnEnter = (event) => {
         const enterKey = event.key === 'Enter';
 
         if(enterKey) {
@@ -40,7 +33,7 @@ export default class Feed extends Component {
         }
     }
 
-    _submitComment() {
+    _submitComment = () => {
         const {comment} = this.state;
 
         if(!comment) {return null}
@@ -54,23 +47,20 @@ export default class Feed extends Component {
 
     render() {
         const { comment } = this.state;
+        const { avatar, currentUserFirstName } = this.props;
         return (
-            <Consumer>
-                { (context) => (
-                    <section className = { Styles.composer } >
-                        <img src = { context.avatar } alt = { context.currentUserFirstName } />
+            <section className = { Styles.composer } >
+                <img src = { avatar } alt = { currentUserFirstName } />
 
-                        <form onSubmit = { this._handlerFormSubmit }>
-                            <textarea
-                                value = { comment }
-                                onChange = { this._updateComment }
-                                onKeyPress = { this._submitOnEnter }
-                                placeholder = { `What's on your mind, ${context.currentUserFirstName}?` } />
-                            <input type = 'submit' value ='Post'/>
-                        </form>
-                    </section>
-                ) }
-            </Consumer>
+                <form onSubmit = { this._handlerFormSubmit }>
+                    <textarea
+                        value = { comment }
+                        onChange = { this._updateComment }
+                        onKeyPress = { this._submitOnEnter }
+                        placeholder = { `What's on your mind, ${currentUserFirstName}?` } />
+                    <input type = 'submit' value ='Post'/>
+                </form>
+            </section>
         );
     }
 }
