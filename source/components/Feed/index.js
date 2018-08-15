@@ -1,43 +1,70 @@
 import React, { Component } from 'react';
 
-import { getUniqueID, delay } from "instruments";
-import moment from 'moment';
+import { getUniqueID, delay } from 'instruments';
 
-import { withProfile } from "components/HOC/withProfile";
-
+import { withProfile } from 'components/HOC/withProfile';
 import Spinner from 'components/Spinner';
 import Composer from 'components/Composer';
 import Post from 'components/Post';
 import StatusBar from 'components/StatusBar';
 
 import Styles from './styles.m.css';
-
+import { api, TOKEN, GROUP_ID } from 'config/api';
+import { socket } from 'socket/init';
 
 @withProfile
 export default class Feed extends Component {
     state = {
-        posts: [
-            {
-                id: '123',
-                comment: 'Hi there!',
-                created: 1451620983,
-                likes: [],
-            },
-            {
-                id: '24',
-                comment: 'hey hey!',
-                created: 1451620900,
-                likes: [],
-            },
-            {
-                id: '2444',
-                comment: 'hooray!',
-                created: 1551620660,
-                likes: [],
-            }
-        ],
+        posts: [],
         isSpinning: false,
     };
+
+    componentDidMount () {
+        const { currentUserFirstName, currentUserLastName } = this.props;
+        this._fetchPosts();
+
+        socket.emit('join', GROUP_ID);
+
+        socket.on('create', (postJSON) => {
+            const { data: createdPost, meta } = JSON.parse(postJSON);
+
+            if (`${currentUserFirstName} ${currentUserLastName}` !==
+                `${meta.authorFirstName} ${meta.authorLastName}`) {
+                this.setState(({ posts }) => ({
+                    posts: [createdPost, ...posts]
+                }));
+            }
+        });
+
+        socket.on('remove', (postJSON) => {
+            const { data: removedPost, meta } = JSON.parse(postJSON);
+
+            if (`${currentUserFirstName} ${currentUserLastName}` !==
+                `${meta.authorFirstName} ${meta.authorLastName}`) {
+                this.setState(({ posts }) => ({
+                    posts: posts.filter(post => post.id !== removedPost.id)
+                }));
+            }
+        });
+
+        socket.on('like', (postJSON) => {
+            const { data: likedPost, meta } = JSON.parse(postJSON);
+
+            if (`${currentUserFirstName} ${currentUserLastName}` !==
+                `${meta.authorFirstName} ${meta.authorLastName}`) {
+                this.setState(({ posts }) => ({
+                    posts: posts.map(
+                        (post) => post.id === likedPost.id ? likedPost : post)
+                }));
+            }
+        });
+    }
+
+    componentWillUnmount () {
+        socket.removeListener('create');
+        socket.removeListener('remove');
+        socket.removeListener('like');
+    }
 
     _setPostsFetchingState = (state) => {
         this.setState({
@@ -45,19 +72,36 @@ export default class Feed extends Component {
         });
     }
 
+    _fetchPosts = async () => {
+
+        this._setPostsFetchingState(true);
+        const response = await fetch(api, {
+            method: 'GET',
+        });
+
+        const { data: posts } = await response.json();
+
+        this.setState({
+            posts,
+            isSpinning: false
+        });
+    };
+
     _createPost = async (comment) => {
         this._setPostsFetchingState(true);
 
-        const post = {
-            id: getUniqueID(),
-            created: moment().unix(),
-            comment,
-            likes: []
-        };
+        const response = await fetch(api, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: TOKEN
+            },
+            body: JSON.stringify({ comment })
+        })
 
-        await delay(1200);
+        const { data: post } = await response.json();
 
-        this.setState(({posts}) => ({
+        this.setState(({ posts }) => ({
             posts: [post, ...posts],
             isSpinning: false,
         }));
@@ -65,15 +109,16 @@ export default class Feed extends Component {
 
     _deletePost = async (id) => {
         this._setPostsFetchingState(true);
-        await delay();
-
-        const newPosts = this.state.posts.filter(post => {
-            return post.id !== id ? post : false;
+        await fetch(`${api}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: TOKEN
+            }
         });
 
         this.setState(({ posts }) => {
             return {
-                posts: newPosts,
+                posts: posts.filter((post) => post.id !== id),
                 isSpinning: false,
             };
         });
@@ -81,34 +126,24 @@ export default class Feed extends Component {
 
      _likePost = async (id) => {
         this._setPostsFetchingState(true);
-        const { currentUserFirstName, currentUserLastName } = this.props;
 
-        await delay(1200);
-
-        const newPosts = this.state.posts.map(post => {
-            if (post.id === id) {
-                return {
-                    ...post,
-                    likes: [
-                        {
-                            id: getUniqueID(),
-                            firstName: currentUserFirstName,
-                            lastName: currentUserLastName
-                        }
-                    ],
-                };
+        const response = await fetch(`${api}/${id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: TOKEN,
             }
-
-            return post;
         });
 
-        this.setState({
-            posts: newPosts,
+        const { data: likedPost } = await response.json();
+
+        this.setState(({ posts }) => ({
+            posts: posts.map(
+                (post) => post.id === likedPost.id ? likedPost : post),
             isSpinning: false,
-        });
+        }));
     }
 
-    render() {
+    render () {
         const { posts, isSpinning } = this.state;
         const postsJSX = posts.map((post) => {
             return <Post key = { post.id }

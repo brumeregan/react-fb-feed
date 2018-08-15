@@ -39,15 +39,13 @@ export default class Like extends Component {
     _getLikedByMe = () => {
         const { currentUserFirstName, currentUserLastName, likes } = this.props;
 
-        return likes.some(({ firstName, lastName}) => {
+        return likes.some(({ firstName, lastName }) => {
             return `${firstName} ${lastName}` === `${currentUserFirstName} ${currentUserLastName}`;
         });
     }
 
     _likePost = () => {
-
         const { _likePost, id } = this.props;
-
         _likePost(id);
     }
 
@@ -64,7 +62,7 @@ export default class Like extends Component {
         const { likes } = this.props;
 
         const likesJSX = likes.map(({firstName, lastName, id}) => {
-            return <li key = { id }>{`${firstName} ${lastName}`}</li>
+            return <li key = { id }>{`${firstName} ${lastName}`}</li>;
         });
 
         return likes.length && showLikers ? <ul>{likesJSX}</ul> : null;

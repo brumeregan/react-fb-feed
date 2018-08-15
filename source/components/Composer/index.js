@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Styles from './styles.m.css';
 
-import { withProfile } from "components/HOC/withProfile";
+import { withProfile } from 'components/HOC/withProfile';
 
 @withProfile
 export default class Composer extends Component {
@@ -28,15 +28,15 @@ export default class Composer extends Component {
     _submitOnEnter = (event) => {
         const enterKey = event.key === 'Enter';
 
-        if(enterKey) {
+        if (enterKey) {
             this._submitComment();
         }
     }
 
     _submitComment = () => {
-        const {comment} = this.state;
+        const { comment } = this.state;
 
-        if(!comment) {return null}
+        if (!comment) { return null }
 
         this.props._createPost(comment);
 
@@ -45,9 +45,10 @@ export default class Composer extends Component {
         });
     }
 
-    render() {
+    render () {
         const { comment } = this.state;
         const { avatar, currentUserFirstName } = this.props;
+
         return (
             <section className = { Styles.composer } >
                 <img src = { avatar } alt = { currentUserFirstName } />
