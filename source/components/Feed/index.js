@@ -67,16 +67,13 @@ export default class Feed extends Component {
         this._setPostsFetchingState(true);
         await delay();
 
-        const postToDeleteIdx = this.state.posts.findIndex(post => {
-            return post.id === id ? post : false;
+        const newPosts = this.state.posts.filter(post => {
+            return post.id !== id ? post : false;
         });
 
         this.setState(({ posts }) => {
-            const postsCopy = [...posts];
-            postsCopy.splice(postToDeleteIdx, 1);
-
             return {
-                posts: postsCopy,
+                posts: newPosts,
                 isSpinning: false,
             };
         });
