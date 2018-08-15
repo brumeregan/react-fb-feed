@@ -21,7 +21,7 @@ export default class Catcher extends Component {
 
     render () {
         if (this.state.error) {
-            return <section className={Styles.catcher}><span>Something has happened......</span></section>
+            return <section className = { Styles.catcher }><span>Something has happened......</span></section>
         }
 
         return this.props.children;
