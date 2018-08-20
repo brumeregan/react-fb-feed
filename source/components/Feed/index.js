@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 
 import { getUniqueID, delay } from 'instruments';
+import { Transition } from 'react-transition-group';
+import { fromTo } from 'gsap';
 
 import { withProfile } from 'components/HOC/withProfile';
 import Spinner from 'components/Spinner';
 import Composer from 'components/Composer';
 import Post from 'components/Post';
 import StatusBar from 'components/StatusBar';
+import Postman from 'components/Postman';
 
 import Styles from './styles.m.css';
 import { api, TOKEN, GROUP_ID } from 'config/api';
@@ -17,10 +20,12 @@ export default class Feed extends Component {
     state = {
         posts: [],
         isSpinning: false,
+        isPostman: true,
     };
 
     componentDidMount () {
         const { currentUserFirstName, currentUserLastName } = this.props;
+
         this._fetchPosts();
 
         socket.emit('join', GROUP_ID);
@@ -75,6 +80,7 @@ export default class Feed extends Component {
     _fetchPosts = async () => {
 
         this._setPostsFetchingState(true);
+
         const response = await fetch(api, {
             method: 'GET',
         });
@@ -122,7 +128,7 @@ export default class Feed extends Component {
                 isSpinning: false,
             };
         });
-    }
+    };
 
      _likePost = async (id) => {
         this._setPostsFetchingState(true);
@@ -143,6 +149,21 @@ export default class Feed extends Component {
         }));
     }
 
+    _animateComposerEnter = (composer) => {
+        fromTo(composer,
+            1,
+            { opacity: 0, rotationX: 50 },
+            { opacity: 1, rotationX: 0 });
+    };
+
+    _animatePostmanEnter = (postman) => {
+      fromTo(postman, 1, { x: 300 }, { x: 0 });
+    };
+
+    _animatePosmanEntered = (postman) => {
+        fromTo(postman, 1, { x: 0, opacity: 1 }, { x: 300, opacity: 0 });
+    };
+
     render () {
         const { posts, isSpinning } = this.state;
         const postsJSX = posts.map((post) => {
@@ -156,7 +177,22 @@ export default class Feed extends Component {
             <section className = { Styles.feed } >
                 <Spinner isSpinning = { isSpinning } />
                 <StatusBar />
-                <Composer _createPost = { this._createPost }/>
+                <Transition
+                    appear
+                    in
+                    timeout = { 1000 }
+                    onEnter = { this._animateComposerEnter } >
+                    <Composer _createPost = { this._createPost }/>
+                </Transition>
+
+                <Transition
+                    appear
+                    in
+                    timeout = { 4000 }
+                    onEnter = { this._animatePostmanEnter }
+                    onEntered = { this._animatePosmanEntered } >
+                    <Postman />
+                </Transition>
                 { postsJSX }
             </section>
         );

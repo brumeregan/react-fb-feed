@@ -18,12 +18,12 @@ export default class Composer extends Component {
         this.setState({
             comment: event.target.value
         });
-    }
+    };
 
     _handlerFormSubmit = (event) => {
         event.preventDefault();
         this._submitComment()
-    }
+    };
 
     _submitOnEnter = (event) => {
         const enterKey = event.key === 'Enter';
@@ -31,19 +31,21 @@ export default class Composer extends Component {
         if (enterKey) {
             this._submitComment();
         }
-    }
+    };
 
     _submitComment = () => {
         const { comment } = this.state;
 
-        if (!comment) { return null }
+        if (!comment) {
+            return null;
+        }
 
         this.props._createPost(comment);
 
         this.setState({
             comment: ''
         });
-    }
+    };
 
     render () {
         const { comment } = this.state;
