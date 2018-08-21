@@ -21,6 +21,7 @@ export default class Feed extends Component {
         posts: [],
         isSpinning: false,
         isPostman: true,
+        isPostman: true
     };
 
     componentDidMount () {
@@ -158,14 +159,20 @@ export default class Feed extends Component {
 
     _animatePostmanEnter = (postman) => {
       fromTo(postman, 1, { x: 300 }, { x: 0 });
+
+        setTimeout(() => {
+            this.setState(({ isPostman }) => ({
+                isPostman: false
+            }));
+        }, 4000);
     };
 
-    _animatePosmanEntered = (postman) => {
+    _animatePosmanExit = (postman) => {
         fromTo(postman, 1, { x: 0, opacity: 1 }, { x: 300, opacity: 0 });
     };
 
     render () {
-        const { posts, isSpinning } = this.state;
+        const { posts, isSpinning, isPostman } = this.state;
         const postsJSX = posts.map((post) => {
             return <Post key = { post.id }
                          { ...post }
@@ -187,10 +194,10 @@ export default class Feed extends Component {
 
                 <Transition
                     appear
-                    in
+                    in = { isPostman }
                     timeout = { 4000 }
                     onEnter = { this._animatePostmanEnter }
-                    onEntered = { this._animatePosmanEntered } >
+                    onExit = { this._animatePosmanExit } >
                     <Postman />
                 </Transition>
                 { postsJSX }
