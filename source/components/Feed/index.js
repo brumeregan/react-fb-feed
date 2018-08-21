@@ -161,8 +161,8 @@ export default class Feed extends Component {
       fromTo(postman, 1, { x: 300 }, { x: 0 });
 
         setTimeout(() => {
-            this.setState(({ isPostman }) => ({
-                isPostman: false
+            this.setState(() => ({
+                isPostman: false,
             }));
         }, 4000);
     };
