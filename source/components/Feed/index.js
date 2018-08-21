@@ -158,7 +158,7 @@ export default class Feed extends Component {
     };
 
     _animatePostmanEnter = (postman) => {
-      fromTo(postman, 1, { x: 300 }, { x: 0 });
+        fromTo(postman, 1, { x: 300 }, { x: 0 });
 
         setTimeout(() => {
             this.setState(() => ({
