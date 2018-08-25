@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { getUniqueID, delay } from 'instruments';
-import { Transition } from 'react-transition-group';
+import { Transition, CSSTransition, TransitionGroup } from 'react-transition-group';
 import { fromTo } from 'gsap';
 
 import { withProfile } from 'components/HOC/withProfile';
@@ -14,6 +14,7 @@ import Postman from 'components/Postman';
 import Styles from './styles.m.css';
 import { api, TOKEN, GROUP_ID } from 'config/api';
 import { socket } from 'socket/init';
+import Catcher from "../Catcher";
 
 @withProfile
 export default class Feed extends Component {
@@ -148,7 +149,7 @@ export default class Feed extends Component {
                 (post) => post.id === likedPost.id ? likedPost : post),
             isSpinning: false,
         }));
-    }
+    };
 
     _animateComposerEnter = (composer) => {
         fromTo(composer,
@@ -159,7 +160,9 @@ export default class Feed extends Component {
 
     _animatePostmanEnter = (postman) => {
         fromTo(postman, 1, { x: 300 }, { x: 0 });
+    };
 
+    _animatePostmanEntered = () => {
         setTimeout(() => {
             this.setState(() => ({
                 isPostman: false,
@@ -174,10 +177,28 @@ export default class Feed extends Component {
     render () {
         const { posts, isSpinning, isPostman } = this.state;
         const postsJSX = posts.map((post) => {
-            return <Post key = { post.id }
-                         { ...post }
-                         _deletePost = { this._deletePost }
-                         _likePost = { this._likePost } />
+            return (
+                <CSSTransition
+                    classNames = { {
+                        enter: Styles.postInStart,
+                        enterActive: Styles.postInEnd,
+                        exit: Styles.postOutStart,
+                        exitActive: Styles.postOutEnd,
+                    } }
+                    key = { post.id }
+                    timeout = { {
+                        enter: 500,
+                        exit: 400,
+                    } } >
+                    <Catcher>
+                        <Post
+                            { ...post }
+                            _deletePost = { this._deletePost }
+                            _likePost = { this._likePost } />
+
+                    </Catcher>
+                </CSSTransition>
+            );
         });
 
         return (
@@ -197,10 +218,13 @@ export default class Feed extends Component {
                     in = { isPostman }
                     timeout = { 1000 }
                     onEnter = { this._animatePostmanEnter }
+                    onEntered = { this._animatePostmanEntered }
                     onExit = { this._animatePosmanExit } >
                     <Postman />
                 </Transition>
-                { postsJSX }
+                <TransitionGroup>
+                    { postsJSX }
+                </TransitionGroup>
             </section>
         );
     }
