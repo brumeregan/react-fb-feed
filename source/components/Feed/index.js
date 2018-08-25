@@ -195,7 +195,7 @@ export default class Feed extends Component {
                 <Transition
                     appear
                     in = { isPostman }
-                    timeout = { 4000 }
+                    timeout = { 1000 }
                     onEnter = { this._animatePostmanEnter }
                     onExit = { this._animatePosmanExit } >
                     <Postman />
