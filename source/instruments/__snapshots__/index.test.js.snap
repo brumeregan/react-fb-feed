@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`instruments getFullApiUrl function test with snapshot 1`] = `"api/group_id"`;
+
+exports[`instruments sum function should return an addition of two arguments 1`] = `9`;

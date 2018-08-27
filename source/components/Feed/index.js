@@ -10,6 +10,7 @@ import Composer from 'components/Composer';
 import Post from 'components/Post';
 import StatusBar from 'components/StatusBar';
 import Postman from 'components/Postman';
+import Counter from 'components/Counter';
 
 import Styles from './styles.m.css';
 import { api, TOKEN, GROUP_ID } from 'config/api';
@@ -212,6 +213,7 @@ export default class Feed extends Component {
                     onEnter = { this._animateComposerEnter } >
                     <Composer _createPost = { this._createPost }/>
                 </Transition>
+                <Counter count = { postsJSX.length } />
 
                 <Transition
                     appear
