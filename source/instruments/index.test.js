@@ -6,11 +6,11 @@ describe('instruments', () => {
         expect(sum).toBeInstanceOf(Function);
     });
 
-    test('sum function should throw error if operand2 is not a number', () => {
+    test('sum function should throw an error if operand2 is not a number', () => {
         expect(() => sum(2, 'hello')).toThrow();
     });
 
-    test('sum function should throw error if operand 1 is not a number', () => {
+    test('sum function should throw an error if operand 1 is not a number', () => {
         expect(() => sum('string', 2)).toThrow();
     });
 
@@ -27,7 +27,7 @@ describe('instruments', () => {
         expect(getUniqueID).toBeInstanceOf(Function);
     });
 
-    test('getUniqueID should throw, when called with non-number', () => {
+    test('getUniqueID should throw, when called with non-number param', () => {
         expect(() => getUniqueID('string')).toThrow();
     });
 
@@ -37,23 +37,23 @@ describe('instruments', () => {
         expect(getUniqueID(11)).toHaveLength(11);
     });
 
-    test('getFullApiUrl function is a function', () => {
-       expect(getFullApiUrl).toBeInstanceOf(Function);
+    test('getFullApiUrl is a function', () => {
+        expect(getFullApiUrl).toBeInstanceOf(Function);
     });
 
-    test('getFullApiUrl function is thrown error is param 1 is not a string', () => {
-       expect(() => getFullApiUrl(null, 'string')).toThrow();
+    test('getFullApiUrl function is thrown an error if param 1 is not a string', () => {
+        expect(() => getFullApiUrl(null, 'string')).toThrow();
     });
 
-    test('getFullApiUrl function is thrown error is param 2 is not a string', () => {
+    test('getFullApiUrl function is thrown an error if param 2 is not a string', () => {
         expect(() => getFullApiUrl('string', 42)).toThrow();
     });
 
-    test('getFullApiUrl returns a string', () => {
+    test('getFullApiUrl should return a string', () => {
         expect(typeof getFullApiUrl('string', 'string')).toBe('string');
     });
 
-    test('getFullApiUrl function test with snapshot', () => {
+    test('getFullApiUrl should match snapshot', () => {
         expect(getFullApiUrl('api', 'group_id')).toMatchSnapshot();
     });
 });
