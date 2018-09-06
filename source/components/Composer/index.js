@@ -4,14 +4,16 @@ import Styles from './styles.m.css';
 
 import { withProfile } from 'components/HOC/withProfile';
 
-@withProfile
-export default class Composer extends Component {
+
+export class Composer extends Component {
     static propTypes = {
-        _createPost: PropTypes.func.isRequired
+        _createPost:          PropTypes.func.isRequired,
+        avatar:               PropTypes.string.isRequired,
+        currentUserFirstName: PropTypes.string.isRequired,
     };
 
     state = {
-        comment: ''
+        comment: '',
     };
 
     _updateComment = (event) => {
@@ -22,7 +24,7 @@ export default class Composer extends Component {
 
     _handlerFormSubmit = (event) => {
         event.preventDefault();
-        this._submitComment()
+        this._submitComment();
     };
 
     _submitOnEnter = (event) => {
@@ -53,17 +55,23 @@ export default class Composer extends Component {
 
         return (
             <section className = { Styles.composer } >
-                <img src = { avatar } alt = { currentUserFirstName } />
+                <img
+                    alt = { currentUserFirstName }
+                    src = { avatar }
+                />
 
                 <form onSubmit = { this._handlerFormSubmit }>
                     <textarea
+                        placeholder = { `What's on your mind, ${currentUserFirstName}?` }
                         value = { comment }
                         onChange = { this._updateComment }
                         onKeyPress = { this._submitOnEnter }
-                        placeholder = { `What's on your mind, ${currentUserFirstName}?` } />
-                    <input type = 'submit' value ='Post'/>
+                    />
+                    <input type = 'submit' value = 'Post' />
                 </form>
             </section>
         );
     }
 }
+
+export default withProfile(Composer);
