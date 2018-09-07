@@ -5,6 +5,7 @@ const { Provider, Consumer } = createContext();
 
 const withProfile = (Enhanceable) => {
     return class WithProfile extends Component {
+
         render () {
             return (
                 <Consumer>

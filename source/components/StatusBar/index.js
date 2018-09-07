@@ -8,6 +8,8 @@ import { socket } from 'socket/init';
 import { Transition } from 'react-transition-group';
 import { fromTo } from 'gsap';
 
+import { Link } from 'react-router-dom'
+
 @withProfile
 export default class StatusBar extends Component {
     state = {
@@ -33,12 +35,14 @@ export default class StatusBar extends Component {
         socket.removeListener('disconnect');
     }
 
-    _animateSTatusBarEnter = (statusBar) => {
+    _animateStatusBarEnter = (statusBar) => {
         fromTo(statusBar, 1, { opacity: 0 }, { opacity: 1 });
-    }
+    };
 
     render () {
-        const { avatar, currentUserFirstName, currentUserLastName } = this.props;
+        console.log('this.props status', this.props);
+
+        const { avatar, currentUserFirstName, currentUserLastName, _logout } = this.props;
 
         const { online } = this.state;
 
@@ -62,12 +66,15 @@ export default class StatusBar extends Component {
                         </div>
                         <span />
                     </div>
-                    <button>
+                    <Link to = '/profile'>
                         <img src = { avatar } alt = { currentUserFirstName } />
                         <span>{ currentUserFirstName }</span>
                         &nbsp;
                         <span>{ currentUserLastName }</span>
-                    </button>
+                    </Link>
+
+                    <Link to = '/feed'>Feed</Link>
+                    <button onClick = { _logout }>Logout</button>
                 </section>
             </Transition>
 
