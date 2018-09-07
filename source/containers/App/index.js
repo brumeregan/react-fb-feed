@@ -1,22 +1,22 @@
 // Core
-import React, { Component } from 'react';
-import { hot } from 'react-hot-loader';
-import avatar from 'theme/assets/lisa';
+import React, { Component } from "react";
+import { hot } from "react-hot-loader";
+import avatar from "theme/assets/lisa";
 
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect } from "react-router-dom";
 
-import { Provider } from 'components/HOC/withProfile';
-import Catcher from 'components/Catcher';
+import { Provider } from "components/HOC/withProfile";
+import Catcher from "components/Catcher";
 
-import Feed from 'components/Feed';
-import Profile from 'components/Profile';
-import StatusBar from 'components/StatusBar';
-import Login from 'components/Login';
+import Feed from "components/Feed";
+import Profile from "components/Profile";
+import StatusBar from "components/StatusBar";
+import Login from "components/Login";
 
 const options = {
     avatar,
-    currentUserFirstName: 'Оксана',
-    currentUserLastName:  'Боярко',
+    currentUserFirstName: "Оксана",
+    currentUserLastName:  "Боярко",
 };
 
 @hot(module)
@@ -25,17 +25,18 @@ export default class App extends Component {
         isAuthenticated: false,
     };
 
-    componentDidMount() {
-        const auth = JSON.parse(localStorage.getItem('lectrum-auth'));
+    componentDidMount () {
+        const auth = JSON.parse(localStorage.getItem("lectrum-auth"));
 
         if (auth && auth.isAuth) {
             this.setState(() => ({
-                isAuthenticated: auth
+                isAuthenticated: auth,
             }));
-
-            console.log('true  auth ', auth);
         } else {
-            localStorage.setItem('lectrum-auth',JSON.stringify({ isAuth: false}));
+            localStorage.setItem(
+                "lectrum-auth",
+                JSON.stringify({ isAuth: false })
+            );
         }
     }
 
@@ -44,7 +45,7 @@ export default class App extends Component {
             isAuthenticated: true,
         });
 
-        localStorage.setItem('lectrum-auth', JSON.stringify({ isAuth: true}));
+        localStorage.setItem("lectrum-auth", JSON.stringify({ isAuth: true }));
     };
 
     _logout = () => {
@@ -52,7 +53,7 @@ export default class App extends Component {
             isAuthenticated: false,
         });
 
-        localStorage.removeItem('lectrum-auth');
+        localStorage.removeItem("lectrum-auth");
     };
 
     render () {
@@ -62,29 +63,29 @@ export default class App extends Component {
             <>
                 <StatusBar _logout = { this._logout } />
                 <Switch>
-                    <Route path = '/feed' component = { Feed } />
-                     <Route path = '/profile' component = { Profile } />
-                     <Redirect to = '/feed' />
+                    <Route component = { Feed } path = '/feed' />
+                    <Route component = { Profile } path = '/profile' />
+                    <Redirect to = '/feed' />
                 </Switch>
             </>
         );
 
         const publicComponent = (
             <Switch>
-                <Route path = '/login'
-                       render = { () => {
-                    return <Login _login = { this._login } />
-                } }/>
+                <Route
+                    path = '/login'
+                    render = { () => {
+                        return <Login _login = { this._login } />;
+                    } }
+                />
                 <Redirect to = '/login' />
             </Switch>
-        )
+        );
         const screen = isAuthenticated ? privateComponents : publicComponent;
 
         return (
             <Catcher>
-                <Provider value = { options }>
-                    { screen }
-                </Provider>
+                <Provider value = { options }>{screen}</Provider>
             </Catcher>
         );
     }

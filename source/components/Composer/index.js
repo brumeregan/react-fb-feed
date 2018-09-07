@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Styles from './styles.m.css';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Styles from "./styles.m.css";
 
-import { withProfile } from 'components/HOC/withProfile';
-
+import { withProfile } from "components/HOC/withProfile";
 
 export class Composer extends Component {
     static propTypes = {
@@ -13,12 +12,12 @@ export class Composer extends Component {
     };
 
     state = {
-        comment: '',
+        comment: "",
     };
 
     _updateComment = (event) => {
         this.setState({
-            comment: event.target.value
+            comment: event.target.value,
         });
     };
 
@@ -28,7 +27,7 @@ export class Composer extends Component {
     };
 
     _submitOnEnter = (event) => {
-        const enterKey = event.key === 'Enter';
+        const enterKey = event.key === "Enter";
 
         if (enterKey) {
             this._submitComment();
@@ -45,7 +44,7 @@ export class Composer extends Component {
         this.props._createPost(comment);
 
         this.setState({
-            comment: ''
+            comment: "",
         });
     };
 
@@ -54,11 +53,8 @@ export class Composer extends Component {
         const { avatar, currentUserFirstName } = this.props;
 
         return (
-            <section className = { Styles.composer } >
-                <img
-                    alt = { currentUserFirstName }
-                    src = { avatar }
-                />
+            <section className = { Styles.composer }>
+                <img alt = { currentUserFirstName } src = { avatar } />
 
                 <form onSubmit = { this._handlerFormSubmit }>
                     <textarea

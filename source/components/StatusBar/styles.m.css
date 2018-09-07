@@ -43,6 +43,25 @@
      }
     }
 
+& button {
+      position: absolute;
+      right: 5px;
+      margin: 0 10px;
+      padding: 2px 10px;
+      background-color: transparent;
+      color: white;
+      font-size: 12px;
+      font-weight: 400;
+      white-space: nowrap;
+      cursor: pointer;
+      border-radius: 4px;
+      outline: none;
+      border: 1px solid var(--paletteColor2);
+      text-decoration: none;
+      min-height: 30px;
+      min-width: 140px;
+  }
+
     & .status {
           position: absolute;
           display: flex;

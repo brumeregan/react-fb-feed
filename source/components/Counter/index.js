@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { number } from 'prop-types';
+import React, { Component } from "react";
+import { number } from "prop-types";
 
-import Styles from './styles.m.css';
+import Styles from "./styles.m.css";
 
 const Counter = ({ count }) => (
     <section className = { Styles.counter }> Post count: {count}</section>

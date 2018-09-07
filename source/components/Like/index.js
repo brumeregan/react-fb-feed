@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Styles from './styles.m.css';
-import cx from 'classnames';
-import { string, arrayOf, func, shape } from 'prop-types';
+import Styles from "./styles.m.css";
+import cx from "classnames";
+import { string, arrayOf, func, shape } from "prop-types";
 
 import { withProfile } from "components/HOC/withProfile";
 
@@ -10,44 +10,48 @@ import { withProfile } from "components/HOC/withProfile";
 export default class Like extends Component {
     static propTypes = {
         _likePost: func.isRequired,
-        id: string.isRequired,
-        likes: arrayOf(
+        id:        string.isRequired,
+        likes:     arrayOf(
             shape({
-                id: string.isRequired,
+                id:        string.isRequired,
                 firstName: string.isRequired,
-                lastName: string.isRequired
+                lastName:  string.isRequired,
             })
-        ).isRequired
+        ).isRequired,
     };
 
     state = {
-        showLikers: false
-    }
+        showLikers: false,
+    };
 
     _showLikers = () => {
         this.setState({
-            showLikers: true
+            showLikers: true,
         });
-    }
+    };
 
     _hideLikers = () => {
         this.setState({
-            showLikers: false
+            showLikers: false,
         });
-    }
+    };
 
     _getLikedByMe = () => {
         const { currentUserFirstName, currentUserLastName, likes } = this.props;
 
         return likes.some(({ firstName, lastName }) => {
-            return `${firstName} ${lastName}` === `${currentUserFirstName} ${currentUserLastName}`;
+            return (
+                `${firstName} ${lastName}` ===
+                `${currentUserFirstName} ${currentUserLastName}`
+            );
         });
-    }
+    };
 
     _likePost = () => {
         const { _likePost, id } = this.props;
+
         _likePost(id);
-    }
+    };
 
     _getLikesStyles = () => {
         const likedByMe = this._getLikedByMe();
@@ -55,18 +59,18 @@ export default class Like extends Component {
         return cx(Styles.icon, {
             [Styles.liked]: likedByMe,
         });
-    }
+    };
 
     _getLikersList = () => {
         const { showLikers } = this.state;
         const { likes } = this.props;
 
-        const likesJSX = likes.map(({firstName, lastName, id}) => {
+        const likesJSX = likes.map(({ firstName, lastName, id }) => {
             return <li key = { id }>{`${firstName} ${lastName}`}</li>;
         });
 
         return likes.length && showLikers ? <ul>{likesJSX}</ul> : null;
-    }
+    };
 
     _getLikesDescription = () => {
         const { likes, currentUserLastName, currentUserFirstName } = this.props;
@@ -82,7 +86,7 @@ export default class Like extends Component {
         }
 
         return likes.length;
-    }
+    };
 
     render () {
         const likeStyles = this._getLikesStyles();
@@ -90,18 +94,16 @@ export default class Like extends Component {
         const likesDescription = this._getLikesDescription();
 
         return (
-            <section className = { Styles.like } >
-                <span
-                    className = { likeStyles }
-                    onClick = { this._likePost } >
+            <section className = { Styles.like }>
+                <span className = { likeStyles } onClick = { this._likePost }>
                     Like
                 </span>
 
                 <div>
-                    { likersList }
+                    {likersList}
                     <span
                         onMouseEnter = { this._showLikers }
-                        onMouseLeave = { this._hideLikers } >
+                        onMouseLeave = { this._hideLikers }>
                         {likesDescription}
                     </span>
                 </div>
